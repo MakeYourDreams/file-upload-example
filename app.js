@@ -1,3 +1,5 @@
+//https://www.twilio.com/pricing
+
 require('dotenv').config();
 
 const bodyParser   = require('body-parser');
@@ -8,6 +10,8 @@ const hbs          = require('hbs');
 const mongoose     = require('mongoose');
 const logger       = require('morgan');
 const path         = require('path');
+const session = require("express-session");
+const MongoStore = require("connect-mongo")(session);
 
 
 mongoose
@@ -38,6 +42,14 @@ app.use(require('node-sass-middleware')({
   sourceMap: true
 }));
       
+app.use(
+  session({
+      secret: "regenerator",
+      resave: true,
+      saveUninitialized: true,
+      store: new MongoStore({ mongooseConnection: mongoose.connection })
+  })
+);
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'hbs');
@@ -50,9 +62,10 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 app.locals.title = 'Express - Generated with IronGenerator';
 
 
-
+// ROUTES 
 const index = require('./routes/index');
 app.use('/', index);
-
+app.use("/auth", require("./routes/auth"));
+app.use('/dragon', require('./routes/dragon-routes/dragon'))
 
 module.exports = app;
