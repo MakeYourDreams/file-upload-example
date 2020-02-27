@@ -67,5 +67,9 @@ const index = require('./routes/index');
 app.use('/', index);
 app.use("/auth", require("./routes/auth"));
 app.use('/dragon', require('./routes/dragon-routes/dragon'))
+app.use('/twilio', require('./routes/twilio-load'))
+
+
+
 
 module.exports = app;
